@@ -7,16 +7,79 @@
 
 import UIKit
 import CoreLocation
+import SnapKit
 
 class WeatherViewController: UIViewController {
 
-    @IBOutlet weak var conditionImageView: UIImageView!
-    @IBOutlet weak var temperatureLabel: UILabel!
-    @IBOutlet weak var cityLabel: UILabel!
-    @IBOutlet weak var searchTextField: UITextField!
+    //MARK: - Property
 
     var weatherManager = WeatherManager()
     let locationManager = CLLocationManager()
+
+    lazy var background: UIImageView = {
+        let background = UIImageView()
+        background.image = UIImage(named: "background")
+        background.contentMode = .scaleAspectFill
+        return background
+    }()
+
+    lazy var locationButton: UIButton = {
+        let locationButton = UIButton()
+        let image = UIImage(systemName: "location.circle.fill") as UIImage?
+        locationButton.setBackgroundImage(image, for: .normal)
+        locationButton.tintColor = UIColor(red: 27/255, green: 67/255, blue: 72/255, alpha: 1)
+        locationButton.addTarget(self, action: #selector(locationButtonPressed), for: .touchUpInside)
+        return locationButton
+    }()
+
+    lazy var searchButton: UIButton = {
+        let searchButton = UIButton()
+        let image = UIImage(systemName: "magnifyingglass")
+        searchButton.setBackgroundImage(image, for: .normal)
+        searchButton.tintColor = locationButton.tintColor
+        searchButton.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
+        return searchButton
+    }()
+
+    lazy var conditionImageView: UIImageView = {
+        let conditionImageView = UIImageView()
+        conditionImageView.contentMode = .scaleAspectFill
+        conditionImageView.clipsToBounds = true
+        conditionImageView.tintColor = locationButton.tintColor
+        return conditionImageView
+    }()
+
+    lazy var temperatureLabel: UILabel = {
+        let temperatureLabel = UILabel()
+        temperatureLabel.font = .systemFont(ofSize: 80, weight: .black)
+        return temperatureLabel
+    }()
+
+    lazy var temperatureSign: UILabel = {
+        let temperatureSign = UILabel()
+        temperatureSign.text = "°C"
+        temperatureSign.font = .systemFont(ofSize: 80, weight: .black)
+        return temperatureSign
+    }()
+
+    lazy var searchTextField: UITextField = {
+        let searchTextField = UITextField()
+        searchTextField.placeholder = "Search"
+        searchTextField.backgroundColor = .systemBackground
+        searchTextField.font = .systemFont(ofSize: 30, weight: .regular)
+        searchTextField.borderStyle = .roundedRect
+        searchTextField.textAlignment = .right
+        searchTextField.autocapitalizationType = .words
+        return searchTextField
+    }()
+
+    lazy var cityLabel: UILabel = {
+        let cityLabel = UILabel()
+        cityLabel.font = .systemFont(ofSize: 30, weight: .regular)
+        return cityLabel
+    }()
+
+    //MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,16 +92,24 @@ class WeatherViewController: UIViewController {
         searchTextField.delegate = self
     }
 
-    @IBAction func searchButtonPressed(_ sender: UIButton) {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupConstraints()
+    }
+
+    //MARK: - Button Methods
+
+    @objc func searchButtonPressed(_ sender: UIButton) {
         searchTextField.endEditing(true)
     }
-    @IBAction func locationButtonPressed(_ sender: UIButton) {
+    @objc func locationButtonPressed(_ sender: UIButton) {
         locationManager.requestLocation()
     }
 }
 
-extension WeatherViewController: UITextFieldDelegate {
+    //MARK: - TextField Delegate
 
+extension WeatherViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         searchTextField.endEditing(true)
     }
@@ -60,8 +131,9 @@ extension WeatherViewController: UITextFieldDelegate {
     }
 }
 
-extension WeatherViewController: WeatherManagerDelegate {
+    //MARK: - Weather Manager Delegate
 
+extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         DispatchQueue.main.async {
             self.temperatureLabel.text = weather.temperatureString
@@ -74,6 +146,8 @@ extension WeatherViewController: WeatherManagerDelegate {
         print(error)
     }
 }
+
+    //MARK: - Location Delegate
 
 extension WeatherViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
