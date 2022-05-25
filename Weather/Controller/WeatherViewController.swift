@@ -13,17 +13,17 @@ class WeatherViewController: UIViewController {
 
     //MARK: - Property
 
-    var weatherManager = WeatherManager()
-    let locationManager = CLLocationManager()
+    private var weatherManager = WeatherManager()
+    private let locationManager = CLLocationManager()
 
-    lazy var background: UIImageView = {
+    private lazy var background: UIImageView = {
         let background = UIImageView()
         background.image = UIImage(named: "background")
         background.contentMode = .scaleAspectFill
         return background
     }()
 
-    lazy var locationButton: UIButton = {
+    private lazy var locationButton: UIButton = {
         let locationButton = UIButton()
         let image = UIImage(systemName: "location.circle.fill") as UIImage?
         locationButton.setBackgroundImage(image, for: .normal)
@@ -32,7 +32,7 @@ class WeatherViewController: UIViewController {
         return locationButton
     }()
 
-    lazy var searchButton: UIButton = {
+    private lazy var searchButton: UIButton = {
         let searchButton = UIButton()
         let image = UIImage(systemName: "magnifyingglass")
         searchButton.setBackgroundImage(image, for: .normal)
@@ -41,7 +41,7 @@ class WeatherViewController: UIViewController {
         return searchButton
     }()
 
-    lazy var conditionImageView: UIImageView = {
+    private lazy var conditionImageView: UIImageView = {
         let conditionImageView = UIImageView()
         conditionImageView.contentMode = .scaleAspectFill
         conditionImageView.clipsToBounds = true
@@ -49,20 +49,20 @@ class WeatherViewController: UIViewController {
         return conditionImageView
     }()
 
-    lazy var temperatureLabel: UILabel = {
+    private lazy var temperatureLabel: UILabel = {
         let temperatureLabel = UILabel()
         temperatureLabel.font = .systemFont(ofSize: 80, weight: .black)
         return temperatureLabel
     }()
 
-    lazy var temperatureSign: UILabel = {
+    private lazy var temperatureSign: UILabel = {
         let temperatureSign = UILabel()
         temperatureSign.text = "°C"
         temperatureSign.font = .systemFont(ofSize: 80, weight: .black)
         return temperatureSign
     }()
 
-    lazy var searchTextField: UITextField = {
+    private lazy var searchTextField: UITextField = {
         let searchTextField = UITextField()
         searchTextField.placeholder = "Search"
         searchTextField.backgroundColor = .systemBackground
@@ -73,7 +73,7 @@ class WeatherViewController: UIViewController {
         return searchTextField
     }()
 
-    lazy var cityLabel: UILabel = {
+    private lazy var cityLabel: UILabel = {
         let cityLabel = UILabel()
         cityLabel.font = .systemFont(ofSize: 30, weight: .regular)
         return cityLabel
@@ -107,7 +107,7 @@ class WeatherViewController: UIViewController {
     }
 }
 
-    //MARK: - TextField Delegate
+//MARK: - TextField Delegate
 
 extension WeatherViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -131,7 +131,7 @@ extension WeatherViewController: UITextFieldDelegate {
     }
 }
 
-    //MARK: - Weather Manager Delegate
+//MARK: - Weather Manager Delegate
 
 extension WeatherViewController: WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
@@ -147,7 +147,7 @@ extension WeatherViewController: WeatherManagerDelegate {
     }
 }
 
-    //MARK: - Location Delegate
+//MARK: - Location Delegate
 
 extension WeatherViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
